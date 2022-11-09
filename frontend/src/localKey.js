@@ -1,0 +1,1 @@
+export const KEY = 'fhjdkaoeuafbnu7qo83a'
