@@ -129,6 +129,7 @@ dmypy.json
 
 # Local Settings
 drf_jwt_backend/local_settings.py
+.utils/OAuth.p8
 
 # Logs
 logs
