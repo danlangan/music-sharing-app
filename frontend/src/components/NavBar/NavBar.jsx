@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import "./NavBar.css";
-import {KEY} from '../../localKey';
 
 const Navbar = () => {
   const { logoutUser, user } = useContext(AuthContext);
@@ -11,7 +10,7 @@ const Navbar = () => {
   return (
     <div className="navBar">
 
-      <p> {KEY} </p>
+      <p> Cross-Platform Music Sharing </p>
       <ul>
         <li className="brand">
           <Link to="/" style={{ textDecoration: "none", color: "white" }}>
