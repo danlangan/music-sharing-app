@@ -10,9 +10,11 @@ const HomePage = () => {
   //TODO: Add an AddCars Page to add a car for a logged in user's garage
   const [user, token] = useAuth();
   const [medias, setMedias] = useState([]);
-  const [mediaId, setMediaId] = useState('')
-  const [mediaType, setMediaType] = useState('')
+  const [mediaId, setMediaId] = useState('');
+  const [mediaType, setMediaType] = useState('');
   const [mediaInfo, setMediaInfo] = useState('');
+  const [translatedMedia, setTranslatedMedia] = useState('');
+  const [appleMusicSearch, setAppleMusicSearch] = useState('');
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -34,6 +36,8 @@ const HomePage = () => {
     selectMediaInfo();
     selectMediatype();
     selectMediaId();
+    fetchSpotifyMediaData();
+    queryAppleMusic();
 
     function selectMediaInfo() {
       const input = document.getElementById('text-box');
@@ -48,13 +52,13 @@ const HomePage = () => {
       mediaInfo.setSelectionRange(0, 2);
       switch(selectionRange) {
         case 'tra':
-          setMediaType('track');
+          setMediaType('tracks');
           return mediaType;
         case 'alb':
-          setMediaType('album');
+          setMediaType('albums');
           return mediaType;
         case 'pla':
-          setMediaType('playlist');
+          setMediaType('playlists');
           return mediaType;
       }
     };
@@ -66,17 +70,52 @@ const HomePage = () => {
           input.focus();
           input.setSelectionRange(32);
           console.log(selectionRange);
+          setMediaId(selectionRange);
+          return mediaId;
+        case 'album':
+          input.focus();
+          input.setSelectionRange(32);
+          console.log(selectionRange);
+          setMediaId(selectionRange);
+          return mediaId;
+        case 'playlist':
+          input.focus();
+          input.setSelectionRange(35);
+          console.log(selectionRange);
+          setMediaId(selectionRange);
+          return mediaId;
       }
     }
+
+    async function fetchSpotifyMediaData(mediaType, mediaId) {
+      try{
+        let response = await axios.get(`https://api.spotify.com/v1/${mediaType}/${mediaId}`);
+        setTranslatedMedia(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.log(error.message);
+      };
+      return translatedMedia
+    }
+
+    async function queryAppleMusic(translatedMedia) {
+      try{
+        let response = await axios.get(`${translatedMedia.artists.name}+${translatedMedia.name}`); // need to have the correct link inputted here in order to have this work correctly
+        setAppleMusicSearch(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.log(error.message);
+      };
+      return appleMusicSearch
+    }
+
 
 }
   return (
     <div className="container">
       <h1>Welcom home, {user.username}!</h1>
 
-      <input onSubmit={getMediaInfo()}>{
-
-      }</input>
+      <input id='text-box' onSubmit={getMediaInfo()}>{}</input>
       {medias &&
         medias.map((media) => (
           <p key={media.id}>
