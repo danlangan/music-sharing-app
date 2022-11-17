@@ -10,6 +10,9 @@ const HomePage = () => {
   //TODO: Add an AddCars Page to add a car for a logged in user's garage
   const [user, token] = useAuth();
   const [medias, setMedias] = useState([]);
+  const [mediaId, setMediaId] = useState('')
+  const [mediaType, setMediaType] = useState('')
+  const [mediaInfo, setMediaInfo] = useState('');
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -26,13 +29,58 @@ const HomePage = () => {
     };
     fetchMedia();
   }, [token]);
+
+  function getMediaInfo() {
+    selectMediaInfo();
+    selectMediatype();
+    selectMediaId();
+
+    function selectMediaInfo() {
+      const input = document.getElementById('text-box');
+      input.focus();
+      input.setSelectionRange(25, 30);
+      console.log(selectionRange);
+      setMediaInfo(selectionRange);
+    };
+
+    function selectMediatype() {
+      mediaInfo.focus();
+      mediaInfo.setSelectionRange(0, 2);
+      switch(selectionRange) {
+        case 'tra':
+          setMediaType('track');
+          return mediaType;
+        case 'alb':
+          setMediaType('album');
+          return mediaType;
+        case 'pla':
+          setMediaType('playlist');
+          return mediaType;
+      }
+    };
+
+    function selectMediaId() {
+      const input = document.getElementById('text-box');
+      switch(mediaType) {
+        case 'track':
+          input.focus();
+          input.setSelectionRange(32);
+          console.log(selectionRange);
+      }
+    }
+
+}
   return (
     <div className="container">
-      <h1>Home Page for {user.username}!</h1>
+      <h1>Welcom home, {user.username}!</h1>
+
+      <input onSubmit={getMediaInfo()}>{
+
+      }</input>
       {medias &&
         medias.map((media) => (
           <p key={media.id}>
-            {media.track} {media.album} {media.playlist}
+            {media.track} {media.album} {media.playlist} {media.trackLink} {media.albumLink} {media.playlistLink} {media.appleMusic} {media.spotify}
           </p>
         ))}
     </div>

@@ -10,11 +10,11 @@ const Navbar = () => {
   return (
     <div className="navBar">
 
-      <p> Cross-Platform Music Sharing </p>
+      <p>Cross-Platform Music Sharing</p>
       <ul>
         <li className="brand">
           <Link to="/" style={{ textDecoration: "none", color: "white" }}>
-            <b>React/Django JWT</b>
+            <b>Share what makes you move with the people you love.</b>
           </Link>
         </li>
         <li>
