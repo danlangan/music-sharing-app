@@ -7,7 +7,6 @@ import axios from "axios";
 const HomePage = () => {
   // The "user" value from this Hook contains the decoded logged in user information (username, first name, id)
   // The "token" value is the JWT token that you will send in the header of any request requiring authentication
-  //TODO: Add an AddCars Page to add a car for a logged in user's garage
   const [user, token] = useAuth();
   const [medias, setMedias] = useState([]);
   const [mediaId, setMediaId] = useState('');
@@ -15,6 +14,7 @@ const HomePage = () => {
   const [mediaInfo, setMediaInfo] = useState('');
   const [translatedMedia, setTranslatedMedia] = useState('');
   const [appleMusicSearch, setAppleMusicSearch] = useState('');
+  const [refinedMediaInfo, setRefinedMediaInfo] = useState('');
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -40,54 +40,54 @@ const HomePage = () => {
     queryAppleMusic();
 
     function selectMediaInfo() {
-      const input = document.getElementById('text-box');
-      input.focus();
-      input.setSelectionRange(25, 30);
-      console.log(selectionRange);
-      setMediaInfo(selectionRange);
+      debugger;
+      mediaInfo.slice(25, 30);
+      setRefinedMediaInfo(mediaInfo);
+      return refinedMediaInfo;
     };
 
     function selectMediatype() {
-      mediaInfo.focus();
-      mediaInfo.setSelectionRange(0, 2);
-      switch(selectionRange) {
+      debugger;
+      refinedMediaInfo.slice(0, 2);
+      switch(refinedMediaInfo) {
         case 'tra':
           setMediaType('tracks');
-          return mediaType;
+          break;
         case 'alb':
           setMediaType('albums');
-          return mediaType;
+          break;
         case 'pla':
-          setMediaType('playlists');
-          return mediaType;
+          setMediaType('playlist');
+          break;
       }
+      return mediaType
     };
 
     function selectMediaId() {
-      const input = document.getElementById('text-box');
-      switch(mediaType) {
+      // const input = document.getElementById('text-box');
+      debugger;
+      switch(mediaInfo) {
         case 'track':
-          input.focus();
-          input.setSelectionRange(32);
-          console.log(selectionRange);
-          setMediaId(selectionRange);
-          return mediaId;
+          mediaInfo.slice(32);
+          console.log(mediaInfo);
+          setMediaId(mediaInfo);
+          break;
         case 'album':
-          input.focus();
-          input.setSelectionRange(32);
-          console.log(selectionRange);
-          setMediaId(selectionRange);
-          return mediaId;
+          mediaType.slice(32);
+          console.log(mediaInfo);
+          setMediaId(mediaInfo);
+          break;
         case 'playlist':
-          input.focus();
-          input.setSelectionRange(35);
-          console.log(selectionRange);
-          setMediaId(selectionRange);
-          return mediaId;
+          mediaType.slice(35);
+          console.log(mediaInfo);
+          setMediaId(mediaInfo);
+          break;
       }
+      return mediaId
     }
 
     async function fetchSpotifyMediaData(mediaType, mediaId) {
+      debugger;
       try{
         let response = await axios.get(`https://api.spotify.com/v1/${mediaType}/${mediaId}`);
         setTranslatedMedia(response.data);
@@ -95,7 +95,7 @@ const HomePage = () => {
       } catch (error) {
         console.log(error.message);
       };
-      return translatedMedia
+      return translatedMedia;
     }
 
     async function queryAppleMusic(translatedMedia) {
@@ -108,20 +108,29 @@ const HomePage = () => {
       };
       return appleMusicSearch
     }
+  }
 
-
+function handleSubmit(event) {
+  event.preventDefault();
+  getMediaInfo(mediaInfo);
 }
+
   return (
     <div className="container">
       <h1>Welcom home, {user.username}!</h1>
+      <form onSubmit={handleSubmit}>
+      <input id='text-box' placeholder='Paste the sharing link here' value={mediaInfo} onChange={(event) => setMediaInfo(event.target.value)}></input>
+      <button type='submit'>Generate Sharing Capability</button>
+      </form>
 
-      <input id='text-box' onSubmit={getMediaInfo()}>{}</input>
+      <ul>
       {medias &&
         medias.map((media) => (
           <p key={media.id}>
             {media.track} {media.album} {media.playlist} {media.trackLink} {media.albumLink} {media.playlistLink} {media.appleMusic} {media.spotify}
           </p>
         ))}
+      </ul>
     </div>
   );
 };
