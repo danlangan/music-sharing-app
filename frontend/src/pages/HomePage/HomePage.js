@@ -41,8 +41,7 @@ const HomePage = () => {
 
     function selectMediaInfo() {
       debugger;
-      mediaInfo.slice(25, 30);
-      setRefinedMediaInfo(mediaInfo);
+      setRefinedMediaInfo(mediaInfo.slice(25,30));
       return refinedMediaInfo;
     };
 
@@ -64,7 +63,6 @@ const HomePage = () => {
     };
 
     function selectMediaId() {
-      // const input = document.getElementById('text-box');
       debugger;
       switch(mediaInfo) {
         case 'track':
@@ -86,7 +84,7 @@ const HomePage = () => {
       return mediaId
     }
 
-    async function fetchSpotifyMediaData(mediaType, mediaId) {
+    async function fetchSpotifyMediaData() {
       debugger;
       try{
         let response = await axios.get(`https://api.spotify.com/v1/${mediaType}/${mediaId}`);
@@ -119,7 +117,7 @@ function handleSubmit(event) {
     <div className="container">
       <h1>Welcom home, {user.username}!</h1>
       <form onSubmit={handleSubmit}>
-      <input id='text-box' placeholder='Paste the sharing link here' value={mediaInfo} onChange={(event) => setMediaInfo(event.target.value)}></input>
+      <input placeholder='Paste sharing link here' value={mediaInfo} onChange={(event) => setMediaInfo(event.target.value)}></input>
       <button type='submit'>Generate Sharing Capability</button>
       </form>
 
