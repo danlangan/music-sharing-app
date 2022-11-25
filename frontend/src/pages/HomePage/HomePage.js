@@ -41,22 +41,24 @@ const HomePage = () => {
 
     function selectMediaInfo() {
       debugger;
-      setRefinedMediaInfo(mediaInfo.slice(25,30));
+      let split_url = mediaInfo.split('/')
+      console.log(split_url[3])
+      let new_media_info = split_url[3]
+      setRefinedMediaInfo(new_media_info);
       return refinedMediaInfo;
     };
 
     function selectMediatype() {
       debugger;
-      refinedMediaInfo.slice(0, 2);
       switch(refinedMediaInfo) {
-        case 'tra':
+        case 'track':
           setMediaType('tracks');
           break;
-        case 'alb':
+        case 'album':
           setMediaType('albums');
           break;
-        case 'pla':
-          setMediaType('playlist');
+        case 'playlist':
+          setMediaType('playlists');
           break;
       }
       return mediaType
