@@ -41,10 +41,10 @@ const HomePage = () => {
 
     function selectMediaInfo() {
       debugger;
-      let split_url = mediaInfo.split('/')
-      console.log(split_url[3])
-      let new_media_info = split_url[3]
-      setRefinedMediaInfo(new_media_info);
+      let splitUrl = mediaInfo.split('/')
+      console.log(splitUrl[3])
+      let newMediaInfo = splitUrl[3]
+      setRefinedMediaInfo(newMediaInfo);
       return refinedMediaInfo;
     };
 
