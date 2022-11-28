@@ -17,6 +17,12 @@ const HomePage = () => {
   const [refinedMediaInfo, setRefinedMediaInfo] = useState('');
 
   useEffect(() => {
+    const splitUrl = mediaInfo.split('/')
+    console.log(splitUrl[3])
+    console.log(splitUrl[4])
+  })
+
+  useEffect(() => {
     const fetchMedia = async () => {
       try {
         let response = await axios.get("http://127.0.0.1:8000/api/media/", {
@@ -39,12 +45,12 @@ const HomePage = () => {
     fetchSpotifyMediaData();
     queryAppleMusic();
 
-    function selectMediaInfo() {
+    function selectMediaInfo(splitUrl) {
       debugger;
-      let splitUrl = mediaInfo.split('/')
-      console.log(splitUrl[3])
-      let newMediaInfo = splitUrl[3]
-      setRefinedMediaInfo(newMediaInfo);
+      // let splitUrl = mediaInfo.split('/')
+      // console.log(splitUrl[3])
+      // let newMediaInfo = splitUrl[3]
+      setRefinedMediaInfo(splitUrl[3]);
       return refinedMediaInfo;
     };
 
