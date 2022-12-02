@@ -17,9 +17,12 @@ const HomePage = () => {
   // const [refinedMediaInfo, setRefinedMediaInfo] = useState('');
   const [splitUrl, setSplitUrl] = useState({});
 
-  // useEffect(() => {
-  //   splitterFunction()
-  // }, [splitUrl])
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      getMediaInfo();
+    }
+  });
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -37,28 +40,19 @@ const HomePage = () => {
     fetchMedia();
   }, [token]);
 
-  // function splitterFunction(){
-  //   debugger;
-  //   const splitUrl = mediaInfo.split('/');
-  //   setSplitUrl(splitUrl);
-  //   console.log(splitUrl[3]);
-  //   console.log(splitUrl[4]);
-  //   // setRefinedMediaInfo(splitUrl[3]);
-  //   // setMediaId(splitUrl[4]);
-  // };
-
   function getMediaInfo() {
     debugger;
     const splitUrl = mediaInfo.split('/');
     setSplitUrl(splitUrl);
-
+    console.log(splitUrl)
+    setMediaId(splitUrl[4]);
+    console.log(mediaId);
+    selectMediatype(splitUrl);
     // splitterFunction();
     // selectMediaInfo(splitUrl);
-    selectMediatype(splitUrl);
-    selectMediaId(splitUrl);
+    // selectMediaId(splitUrl);
     fetchSpotifyMediaData();
-    queryAppleMusic();
-
+    queryAppleMusic(translatedMedia);
     // function selectMediaInfo() {
     //   debugger;
     //   setRefinedMediaInfo(splitUrl[3]);
@@ -67,7 +61,7 @@ const HomePage = () => {
   };
 
     function selectMediatype() {
-      debugger;
+      // debugger;
       switch(splitUrl[3]) {
         case 'track':
           setMediaType('tracks');
@@ -82,15 +76,15 @@ const HomePage = () => {
       return mediaType
     };
 
-    function selectMediaId() {
-      console.log(splitUrl[4])
-      debugger;
-      setMediaId(splitUrl[4])
-      return mediaId
-    }
+    // function selectMediaId() {
+    //   console.log(splitUrl[4])
+    //   debugger;
+    //   setMediaId(splitUrl[4])
+    //   return mediaId
+    // }
 
     async function fetchSpotifyMediaData() {
-      debugger;
+      // debugger;
       try{
         let response = await axios.get(`https://api.spotify.com/v1/${mediaType}/${mediaId}`);
         setTranslatedMedia(response.data);
@@ -101,7 +95,7 @@ const HomePage = () => {
       return translatedMedia;
     }
 
-    async function queryAppleMusic(translatedMedia) {
+    async function queryAppleMusic() {
       try{
         let response = await axios.get(`https://api.music.apple.com/v1/me/library/search/${translatedMedia.artists.name}+${translatedMedia.name}`);
         setAppleMusicSearch(response.data);
