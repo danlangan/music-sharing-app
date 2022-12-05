@@ -9,13 +9,13 @@ const HomePage = () => {
   // The "token" value is the JWT token that you will send in the header of any request requiring authentication
   const [user, token] = useAuth();
   const [medias, setMedias] = useState([]);
-  const [mediaId, setMediaId] = useState('');
-  const [mediaType, setMediaType] = useState('');
+  // const [mediaId, setMediaId] = useState('');
+  // const [mediaType, setMediaType] = useState('');
   const [mediaInfo, setMediaInfo] = useState('');
   const [translatedMedia, setTranslatedMedia] = useState('');
   const [appleMusicSearch, setAppleMusicSearch] = useState('');
   // const [refinedMediaInfo, setRefinedMediaInfo] = useState('');
-  const [splitUrl, setSplitUrl] = useState([]);
+  // const [splitUrl, setSplitUrl] = useState([]);
 
   // useEffect(() => {
   //   let mounted = true;
@@ -42,51 +42,65 @@ const HomePage = () => {
 
   function getMediaInfo() {
     const splitUrlScoped = mediaInfo.split('/');
-    debugger;
-    // setSplitUrl(splitUrlScoped);
-    // // setMediaId(splitUrlScoped[4]);
-    selectMediatype(splitUrlScoped);
+    let readyMediaType = ''
+    let readyMediaId = ''
     selectMediaId(splitUrlScoped);
-    debugger;
-    fetchSpotifyMediaData();
-    queryAppleMusic(translatedMedia);
-    // function selectMediaInfo() {
-    //   debugger;
-    //   setRefinedMediaInfo(splitUrl[3]);
-    //   return refinedMediaInfo;
-    // };
-    console.log(splitUrl)
+    selectMediatype(splitUrlScoped);
+    function selectMediatype(splitUrlScoped) {
+      if (splitUrlScoped[3] === 'track') {
+        readyMediaType = 'tracks';
+      } else if (splitUrlScoped[3] === 'album') {
+        readyMediaType = 'albums';
+      } else if (splitUrlScoped[3] === 'playlist') {
+        readyMediaType = 'playlists'
+      };
+    };
+    function selectMediaId(splitUrlScoped) {
+      readyMediaId = splitUrlScoped[4];
+    }
+    fetchSpotifyMediaData(readyMediaType, readyMediaId);
   };
 
-    function selectMediatype(mediaTypeInfo) {
-      debugger;
-      console.log(mediaTypeInfo[3])
-      switch(mediaTypeInfo[3]) {
-        case 'track':
-          setMediaType('tracks');
-          break;
-        case 'album':
-          setMediaType('albums');
-          break;
-        case 'playlist':
-          setMediaType('playlists');
-          break;
-      }
-      return mediaType
-    };
+    // function selectMediatype(mediaTypeInfo) {
+    //   console.log(mediaTypeInfo[3])
+    //   // setMediaType(mediaTypeInfo[3])
+    //   if (mediaTypeInfo[3] === 'track') {
+    //     const readyMediaType = 'tracks';
+    //   } else if (mediaTypeInfo[3] === 'album') {
+    //     const readyMediaType = 'albums'
+    //   } else if (mediaTypeInfo[3] === 'playlist'); {
+    //     const readyMediaType = 'playlists'
+    //   } 
+    //   return readyMediaType;
+    // };
 
-    function selectMediaId(mediaIdInfo) {
-      console.log(mediaIdInfo[4])
-      debugger;
-      setMediaId(mediaIdInfo[4])
-      fetchSpotifyMediaData()
-      return mediaId
-    };
+      // switch(mediaTypeInfo[3]) {
+      //   case 'track':
+      //     setMediaType('tracks');
+      //     break;
+      //   case 'album':
+      //     setMediaType('albums');
+      //     let read = 'albums'
+      //     break;
+      //   case 'playlist':
+      //     setMediaType('playlists');
+      //     break;
+      //   default:
+      //     setMediaType(mediaTypeInfo[3]);
+      // };
+      // return readyMediaType;
 
-    async function fetchSpotifyMediaData(mediaTypeInfo, mediaIdInfo) {
-      // debugger;
+    // function selectMediaId(mediaIdInfo) {
+    //   console.log(mediaIdInfo[4]);
+    //   const readyMediaId = mediaIdInfo[4];
+    //   setMediaId(mediaIdInfo[4]);
+    //   return readyMediaId;
+    // };
+
+    async function fetchSpotifyMediaData(readyMediaType, readyMediaId) {
+      debugger;
       try{
-        let response = await axios.get(`https://api.spotify.com/v1/${mediaTypeInfo}/${mediaIdInfo}`);
+        let response = await axios.get(`https://api.spotify.com/v1/${readyMediaType}/${readyMediaId}`);
         setTranslatedMedia(response.data);
         console.log(response.data)
       } catch (error) {
@@ -119,7 +133,7 @@ const HomePage = () => {
       <input placeholder='Paste sharing link here' value={mediaInfo} onChange={(event) => setMediaInfo(event.target.value)}></input>
       <button type='submit'>Generate Sharing Capability</button>
       </form>
-
+      <h2>See your history of shared media below:</h2>
       <ul>
       {medias &&
         medias.map((media) => (
