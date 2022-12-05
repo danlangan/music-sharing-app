@@ -15,14 +15,14 @@ const HomePage = () => {
   const [translatedMedia, setTranslatedMedia] = useState('');
   const [appleMusicSearch, setAppleMusicSearch] = useState('');
   // const [refinedMediaInfo, setRefinedMediaInfo] = useState('');
-  const [splitUrl, setSplitUrl] = useState({});
+  const [splitUrl, setSplitUrl] = useState([]);
 
-  useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      getMediaInfo();
-    }
-  });
+  // useEffect(() => {
+  //   let mounted = true;
+  //   if (mounted) {
+  //     getMediaInfo();
+  //   }
+  // });
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -41,16 +41,13 @@ const HomePage = () => {
   }, [token]);
 
   function getMediaInfo() {
+    const splitUrlScoped = mediaInfo.split('/');
     debugger;
-    const splitUrl = mediaInfo.split('/');
-    setSplitUrl(splitUrl);
-    console.log(splitUrl)
-    setMediaId(splitUrl[4]);
-    console.log(mediaId);
-    selectMediatype(splitUrl);
-    // splitterFunction();
-    // selectMediaInfo(splitUrl);
-    // selectMediaId(splitUrl);
+    // setSplitUrl(splitUrlScoped);
+    // // setMediaId(splitUrlScoped[4]);
+    selectMediatype(splitUrlScoped);
+    selectMediaId(splitUrlScoped);
+    debugger;
     fetchSpotifyMediaData();
     queryAppleMusic(translatedMedia);
     // function selectMediaInfo() {
@@ -58,11 +55,13 @@ const HomePage = () => {
     //   setRefinedMediaInfo(splitUrl[3]);
     //   return refinedMediaInfo;
     // };
+    console.log(splitUrl)
   };
 
-    function selectMediatype() {
-      // debugger;
-      switch(splitUrl[3]) {
+    function selectMediatype(mediaTypeInfo) {
+      debugger;
+      console.log(mediaTypeInfo[3])
+      switch(mediaTypeInfo[3]) {
         case 'track':
           setMediaType('tracks');
           break;
@@ -76,17 +75,18 @@ const HomePage = () => {
       return mediaType
     };
 
-    // function selectMediaId() {
-    //   console.log(splitUrl[4])
-    //   debugger;
-    //   setMediaId(splitUrl[4])
-    //   return mediaId
-    // }
+    function selectMediaId(mediaIdInfo) {
+      console.log(mediaIdInfo[4])
+      debugger;
+      setMediaId(mediaIdInfo[4])
+      fetchSpotifyMediaData()
+      return mediaId
+    };
 
-    async function fetchSpotifyMediaData() {
+    async function fetchSpotifyMediaData(mediaTypeInfo, mediaIdInfo) {
       // debugger;
       try{
-        let response = await axios.get(`https://api.spotify.com/v1/${mediaType}/${mediaId}`);
+        let response = await axios.get(`https://api.spotify.com/v1/${mediaTypeInfo}/${mediaIdInfo}`);
         setTranslatedMedia(response.data);
         console.log(response.data)
       } catch (error) {
@@ -104,7 +104,7 @@ const HomePage = () => {
         console.log(error.message);
       };
       return appleMusicSearch
-    }
+    };
   
 
   function handleSubmit(event) {
