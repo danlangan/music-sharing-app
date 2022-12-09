@@ -9,20 +9,9 @@ const HomePage = () => {
   // The "token" value is the JWT token that you will send in the header of any request requiring authentication
   const [user, token] = useAuth();
   const [medias, setMedias] = useState([]);
-  // const [mediaId, setMediaId] = useState('');
-  // const [mediaType, setMediaType] = useState('');
   const [mediaInfo, setMediaInfo] = useState('');
   const [translatedMedia, setTranslatedMedia] = useState('');
   const [appleMusicSearch, setAppleMusicSearch] = useState('');
-  // const [refinedMediaInfo, setRefinedMediaInfo] = useState('');
-  // const [splitUrl, setSplitUrl] = useState([]);
-
-  // useEffect(() => {
-  //   let mounted = true;
-  //   if (mounted) {
-  //     getMediaInfo();
-  //   }
-  // });
 
   useEffect(() => {
     const fetchMedia = async () => {
@@ -41,6 +30,7 @@ const HomePage = () => {
   }, [token]);
 
   function getMediaInfo() {
+    debugger;
     const splitUrlScoped = mediaInfo.split('/');
     let readyMediaType = ''
     let readyMediaId = ''
@@ -59,55 +49,30 @@ const HomePage = () => {
       readyMediaId = splitUrlScoped[4];
     }
     fetchSpotifyMediaData(readyMediaType, readyMediaId);
-  };
-
-    // function selectMediatype(mediaTypeInfo) {
-    //   console.log(mediaTypeInfo[3])
-    //   // setMediaType(mediaTypeInfo[3])
-    //   if (mediaTypeInfo[3] === 'track') {
-    //     const readyMediaType = 'tracks';
-    //   } else if (mediaTypeInfo[3] === 'album') {
-    //     const readyMediaType = 'albums'
-    //   } else if (mediaTypeInfo[3] === 'playlist'); {
-    //     const readyMediaType = 'playlists'
-    //   } 
-    //   return readyMediaType;
-    // };
-
-      // switch(mediaTypeInfo[3]) {
-      //   case 'track':
-      //     setMediaType('tracks');
-      //     break;
-      //   case 'album':
-      //     setMediaType('albums');
-      //     let read = 'albums'
-      //     break;
-      //   case 'playlist':
-      //     setMediaType('playlists');
-      //     break;
-      //   default:
-      //     setMediaType(mediaTypeInfo[3]);
-      // };
-      // return readyMediaType;
-
-    // function selectMediaId(mediaIdInfo) {
-    //   console.log(mediaIdInfo[4]);
-    //   const readyMediaId = mediaIdInfo[4];
-    //   setMediaId(mediaIdInfo[4]);
-    //   return readyMediaId;
-    // };
 
     async function fetchSpotifyMediaData(readyMediaType, readyMediaId) {
       debugger;
       try{
         let response = await axios.get(`https://api.spotify.com/v1/${readyMediaType}/${readyMediaId}`);
-        setTranslatedMedia(response.data);
+        let spotifyDataReturn = (response.data);
+        // setTranslatedMedia(response.data);
         console.log(response.data)
       } catch (error) {
         console.log(error.message);
       };
-      return translatedMedia;
-    }
+      function getSpotifyApiData(spotifyDataReturn) {
+        if (readyMediaType === 'tracks') {
+          let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
+      } else if (readyMediaType === 'playlists') {
+          let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
+      } else if (readyMediaType === 'albums') {
+        let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
+      };
+    }};
+    // there is lots of building out to do left in the code above but that is the overall structure as to how to know what dot notation to use to access certain information within the variables
+  };
+
+    
 
     async function queryAppleMusic() {
       try{
