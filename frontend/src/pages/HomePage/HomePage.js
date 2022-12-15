@@ -54,12 +54,13 @@ const HomePage = () => {
       debugger;
       try{
         let response = await axios.get(`https://api.spotify.com/v1/${readyMediaType}/${readyMediaId}`);
-        let spotifyDataReturn = (response.data);
+        let spotifyDataReturn = response.data;
         // setTranslatedMedia(response.data);
         console.log(response.data)
       } catch (error) {
         console.log(error.message);
       };
+
       function getSpotifyApiData(spotifyDataReturn) {
         if (readyMediaType === 'tracks') {
           let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
@@ -68,23 +69,28 @@ const HomePage = () => {
       } else if (readyMediaType === 'albums') {
         let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
       };
-    }};
-    // there is lots of building out to do left in the code above but that is the overall structure as to how to know what dot notation to use to access certain information within the variables
-  };
-
-    
-
-    async function queryAppleMusic() {
+      queryAppleMusic(parsedSpotifyData);
+    };
+    async function queryAppleMusic(parsedSpotifyData) {
       try{
-        let response = await axios.get(`https://api.music.apple.com/v1/me/library/search/${translatedMedia.artists.name}+${translatedMedia.name}`);
-        setAppleMusicSearch(response.data);
+        let response = await axios.get(`https://api.music.apple.com/v1/me/library/search/${parsedSpotifyData.artists.name}+${parsedSpotifyData.name}`);
+        let appleMusicDataReturn = response.data
+        // setAppleMusicSearch(response.data);
         console.log(response.data);
       } catch (error) {
         console.log(error.message);
       };
-      return appleMusicSearch
     };
+  };
+  //this is where getMediaInfo() ends
+  // there is lots of building out to do left in the code above but that is the overall structure as to how to know what dot notation to use to access certain information within the variables
+   
+  };
+
+    
+
   
+
 
   function handleSubmit(event) {
     event.preventDefault();
