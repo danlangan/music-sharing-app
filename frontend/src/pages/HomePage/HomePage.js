@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Switch } from 'antd';
 import axios from "axios";
+const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03'
+const CLIENT_SECRET = 'cc91a30aee904fbf992156e53ee9831a'
 
 const HomePage = () => {
   // The "user" value from this Hook contains the decoded logged in user information (username, first name, id)
@@ -11,10 +13,31 @@ const HomePage = () => {
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
   const [toggle, setToggle] = useState(false);
+  const [spotifyAccessToken, setSpotifyAccessToken] = useState('')
   // const [translatedMedia, setTranslatedMedia] = useState('');
   // const [appleMusicSearch, setAppleMusicSearch] = useState('');
 
   useEffect(() => {
+    // Spotify API Access Token
+    var spotifyAuthParameters = {
+      method : 'POST',
+      headers : {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'grant_type=client_credentials&clientID=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+    }
+    fetch('https://accounts.spotify.com/api/token', spotifyAuthParameters)
+    .then(result => result.json())
+    .then(data => setSpotifyAccessToken(data.access_token))
+
+    // Apple Music API Access Token
+    var appleMusicAuthParameters = {
+      method : 'POST',
+      headers : {
+        'Content-Type': 'application'
+      }
+    }
+
     const fetchMedia = async () => {
       try {
         let response = await axios.get("http://127.0.0.1:8000/api/media/", {
@@ -29,6 +52,24 @@ const HomePage = () => {
     };
     fetchMedia();
   }, [token]);
+
+  async function spotifySearch() {
+    // GET request using the search to get the artist ID
+    var searchParameters = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + spotifyAccessToken
+    }
+  }
+  var artistID = await fetch('https://api.spotify.com/v1/search?q=' + parsedSpotifyData + '&type=artist', searchParameters)
+    .then(response => response.json())
+    .then(data => { return data.artists.items[0].id })
+  console.log('The artist ID is' + artistID)
+  // Get request with Artist ID to grab all the albumbs from that artist
+  var albums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums' + '?include_groups=album&market=US&limit=50', searchParameters)
+  then(response => response.json())
+}
 
   function getMediaInfo() {
     if (toggle === true) {
