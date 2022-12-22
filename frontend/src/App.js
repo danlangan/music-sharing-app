@@ -15,6 +15,28 @@ import Footer from "./components/Footer/Footer";
 // Util Imports
 import PrivateRoute from "./utils/PrivateRoute";
 
+useEffect(() => {
+  // Spotify API Access Token
+  var spotifyAuthParameters = {
+    method : 'POST',
+    headers : {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'grant_type=client_credentials&clientID=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+  }
+  fetch('https://accounts.spotify.com/api/token', spotifyAuthParameters)
+  .then(result => result.json())
+  .then(data => setSpotifyAccessToken(data.access_token))
+
+  // Apple Music API Access Token
+  var appleMusicAuthParameters = {
+    method : 'POST',
+    headers : {
+      'Content-Type': 'application'
+    }
+  }
+},);
+
 function App() {
   return (
     <div>
