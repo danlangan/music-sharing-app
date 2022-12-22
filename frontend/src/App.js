@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import {KEY} from "./localKey";
+import './server'
 
 // Pages Imports
 import HomePage from "./pages/HomePage/HomePage";
@@ -38,6 +39,9 @@ useEffect(() => {
         app: {
           name: 'musicsharingapp',
           build: '1978.4.1',
+          alg: 'ES256',
+          issuer: 'A4NXNNBMQ6',
+          kid: 'Y8F8JV7CXD'
         },
       });
     } catch (err) {
