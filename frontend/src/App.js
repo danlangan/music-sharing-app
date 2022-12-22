@@ -16,6 +16,7 @@ import Footer from "./components/Footer/Footer";
 import PrivateRoute from "./utils/PrivateRoute";
 
 useEffect(() => {
+  //Start Authentication Server Code
   // Spotify API Access Token
   var spotifyAuthParameters = {
     method : 'POST',
@@ -28,13 +29,24 @@ useEffect(() => {
   .then(result => result.json())
   .then(data => setSpotifyAccessToken(data.access_token))
 
-  // Apple Music API Access Token
-  var appleMusicAuthParameters = {
-    method : 'POST',
-    headers : {
-      'Content-Type': 'application'
+  // Apple Music API Configuration
+  document.addEventListener('musickitloaded', async function () {
+    // Call configure() to configure an instance of MusicKit on the Web.
+    try {
+      await MusicKit.configure({
+        developerToken: 'DEVELOPER-TOKEN',
+        app: {
+          name: 'musicsharingapp',
+          build: '1978.4.1',
+        },
+      });
+    } catch (err) {
+      // Handle configuration error
     }
-  }
+  
+    // MusicKit instance is available
+    const music = MusicKit.getInstance();
+  });
 },);
 
 function App() {
