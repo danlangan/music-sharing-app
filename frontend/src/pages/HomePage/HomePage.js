@@ -24,19 +24,19 @@ const HomePage = () => {
       headers : {
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: 'grant_type=client_credentials&clientID=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+      body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
     }
     fetch('https://accounts.spotify.com/api/token', spotifyAuthParameters)
     .then(result => result.json())
     .then(data => setSpotifyAccessToken(data.access_token))
 
     // Apple Music API Access Token
-    var appleMusicAuthParameters = {
-      method : 'POST',
-      headers : {
-        'Content-Type': 'application'
-      }
-    }
+    // var appleMusicAuthParameters = {
+    //   method : 'POST',
+    //   headers : {
+    //     'Content-Type': 'application'
+    //   }
+    // }
 
     const fetchMedia = async () => {
       try {
@@ -53,23 +53,23 @@ const HomePage = () => {
     fetchMedia();
   }, [token]);
 
-  async function spotifySearch() {
-    // GET request using the search to get the artist ID
-    var searchParameters = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + spotifyAccessToken
-    }
-  }
-  var artistID = await fetch('https://api.spotify.com/v1/search?q=' + parsedSpotifyData + '&type=artist', searchParameters)
-    .then(response => response.json())
-    .then(data => { return data.artists.items[0].id })
-  console.log('The artist ID is' + artistID)
-  // Get request with Artist ID to grab all the albumbs from that artist
-  var albums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums' + '?include_groups=album&market=US&limit=50', searchParameters)
-  then(response => response.json())
-}
+  // async function spotifySearch() {
+  //   // GET request using the search to get the artist ID
+  //   var searchParameters = {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer ' + spotifyAccessToken
+  //   }
+  // }
+  // var artistID = await fetch('https://api.spotify.com/v1/search?q=' + parsedSpotifyData + '&type=artist', searchParameters)
+  //   .then(response => response.json())
+  //   .then(data => { return data.artists.items[0].id })
+  // console.log('The artist ID is' + artistID)
+  // // Get request with Artist ID to grab all the albumbs from that artist
+  // var albums = await fetch('https://api.spotify.com/v1/artists/' + artistID + '/albums' + '?include_groups=album&market=US&limit=50', searchParameters)
+  // .then(response => response.json())
+  // }
 
   function getMediaInfo() {
     if (toggle === true) {
@@ -91,12 +91,12 @@ const HomePage = () => {
     function selectMediaId(splitUrlScoped) {
       readyMediaId = splitUrlScoped[4];
     }
-    fetchSpotifyMediaData(readyMediaType, readyMediaId);
+    fetchSpotifyMediaData(readyMediaType, readyMediaId, spotifyAccessToken);
 
-    async function fetchSpotifyMediaData(readyMediaType, readyMediaId) {
+    async function fetchSpotifyMediaData(readyMediaType, readyMediaId, spotifyAccessToken) {
       debugger;
       try{
-        let response = await axios.get(`https://api.spotify.com/v1/${readyMediaType}/${readyMediaId}`);
+        let response = await axios.get(`https://api.spotify.com/v1/${readyMediaType}/${readyMediaId}`, spotifyAccessToken);
         console.log(response.data)
         let spotifyDataReturn = response.data;
         getSpotifyApiData(spotifyDataReturn);
