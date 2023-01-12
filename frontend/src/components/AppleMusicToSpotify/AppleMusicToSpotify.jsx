@@ -9,17 +9,22 @@ document.addEventListener('musickitloaded', function() {
       developerToken: appleMusicKey,
       app: {
         name: 'music-sharing-app',
-        build: '1978.4.1',
-        alg: ''
+        build: '1978.4.1'
       }
     });
   });
 
 const configuration = {
-
+    alg: '',
+    kid: '',
+    iss: '',
+    exp: '',
+    iat: '',
 }
 
-static MusicKit.MusicKitInstance configure(MusicKit.Configuration, configuration)
+// static MusicKit.MusicKitInstance configure(MusicKit.Configuration, configuration)
+
+// not sure if the above static declaration is for swift or if it is usable for JavaScript as well... doing more research and will get to the botton of it
 
 let music = MusicKit.getInstance();
 
