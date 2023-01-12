@@ -199,7 +199,7 @@ const HomePage = () => {
 
   return (
     <div className="container">
-      <h1>Welcom home, {user.username}!</h1>
+      <h1>Welcome home, {user.username}!</h1>
       <form onSubmit={handleSubmit}>
         <div>
         <p>Toggle between sharing Spotify or an Apple Music Media</p>
