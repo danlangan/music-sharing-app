@@ -3,6 +3,9 @@ import appleMusicKey from '../../localKey'
 
 const [appleMusicKey, setAppleMusicKey] = useState(appleMusicKey)
 
+curl = {-v, -H, 'Authorization: Bearer [developer token]', "https://api.music.apple.com/v1/test"}
+
+
 document.addEventListener('musickitloaded', function() {
     // MusicKit global is now defined
     MusicKit.configure({
@@ -45,3 +48,15 @@ let music = MusicKit.getInstance();
 
 
  const stringToResource = 'https://developer.apple.com/documentation/musickitjs/accessing_musickit_features_using_javascript'
+
+
+ <head>
+ [...]
+ <meta name="apple-music-developer-token" content="DEVELOPER-TOKEN"/>
+ <meta name="apple-music-app-name" content="My Cool Web App"/>
+ <meta name="apple-music-app-build" content="1978.4.1"/>
+ [...]
+</head>
+
+<button id="apple-music-authorize"></button>
+<button id="apple-music-unauthorize"></button>
