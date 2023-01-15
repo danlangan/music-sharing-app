@@ -3,7 +3,7 @@ import appleMusicKey from '../../localKey'
 
 const [appleMusicKey, setAppleMusicKey] = useState(appleMusicKey)
 
-curl = {-v, -H, 'Authorization: Bearer [developer token]', "https://api.music.apple.com/v1/test"}
+// curl = {-v, -H, 'Authorization: Bearer [developer token]', "https://api.music.apple.com/v1/test"}
 
 
 document.addEventListener('musickitloaded', function() {
@@ -50,13 +50,33 @@ let music = MusicKit.getInstance();
  const stringToResource = 'https://developer.apple.com/documentation/musickitjs/accessing_musickit_features_using_javascript'
 
 
- <head>
- [...]
- <meta name="apple-music-developer-token" content="DEVELOPER-TOKEN"/>
- <meta name="apple-music-app-name" content="My Cool Web App"/>
- <meta name="apple-music-app-build" content="1978.4.1"/>
- [...]
-</head>
+//  <head>
+//  [...]
+//  <meta name="apple-music-developer-token" content="DEVELOPER-TOKEN"/>
+//  <meta name="apple-music-app-name" content="My Cool Web App"/>
+//  <meta name="apple-music-app-build" content="1978.4.1"/>
+//  [...]
+// </head>
 
-<button id="apple-music-authorize"></button>
-<button id="apple-music-unauthorize"></button>
+// <button id="apple-music-authorize"></button>
+// <button id="apple-music-unauthorize"></button>
+
+
+// new documentation for apple music authentication set up
+
+// const jwt     = require("jsonwebtoken");          
+// const privateKey = fs.readFileSync("AuthKey_KEY_ID.p8").toString();      
+
+// const teamId     = TEAM_ID_HERE;      
+// const keyId      = KEY_ID_HERE;    
+
+//  const jwtToken = jwt.sign({}, privateKey, {                       
+//                                              algorithm: "ES256",                    
+//                                              expiresIn: "120d",                    
+//                                              issuer: teamId,
+//                                              header: {                             
+//                                                        alg: "ES256",
+//                                                       kid: keyId                       
+//                                              }             
+//                               });     
+// console.log(jwtToken);
