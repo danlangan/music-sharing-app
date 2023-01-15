@@ -200,6 +200,12 @@ const HomePage = () => {
   return (
     <div className="container">
       <h1>Welcome home, {user.username}!</h1>
+      <script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script>
+
+      <meta name="apple-music-developer-token" content="DEVELOPER-TOKEN"/>
+      <meta name="apple-music-app-name" content="My Cool Web App"/>
+      <meta name="apple-music-app-build" content="1978.4.1"/>
+
       <form onSubmit={handleSubmit}>
         <div>
         <p>Toggle between sharing Spotify or an Apple Music Media</p>
