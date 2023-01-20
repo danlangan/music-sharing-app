@@ -14,7 +14,7 @@ def edit_all_media(request, pk):
     media = get_object_or_404(Media, pk)
     print(
         'User ', f"{request.user.id} {request.user.email} {request.user.username}"
-    )
+    )ç
     if request.method == 'POST':
         serializer = MediaSerializer(media, many=True)
         if serializer.is_valid():
