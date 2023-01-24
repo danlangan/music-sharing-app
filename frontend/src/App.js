@@ -18,9 +18,6 @@ import Footer from "./components/Footer/Footer";
 // Util Imports
 import PrivateRoute from "./utils/PrivateRoute";
 
-const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03'
-const CLIENT_SECRET = 'cc91a30aee904fbf992156e53ee9831a'
-
 function App() {
 
   // const [spotifyAccessToken, setSpotifyAccessToken] = useState('')
