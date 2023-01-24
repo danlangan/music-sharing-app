@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Switch } from 'antd';
 import axios from "axios";
-const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03'
-const CLIENT_SECRET = 'cc91a30aee904fbf992156e53ee9831a'
+
+const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03' // spotify
+const CLIENT_SECRET = 'cc91a30aee904fbf992156e53ee9831a' // spotify
+
+const TEAM_ID = '' //apple music
+const KEY_ID = '' //apple music
 
 const HomePage = () => {
   // The "user" value from this Hook contains the decoded logged in user information (username, first name, id)
@@ -12,31 +16,62 @@ const HomePage = () => {
   const [user, token] = useAuth();
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
-  const [toggle, setToggle] = useState(false);
-  const [spotifyAccessToken, setSpotifyAccessToken] = useState('')
-  // const [translatedMedia, setTranslatedMedia] = useState('');
-  // const [appleMusicSearch, setAppleMusicSearch] = useState('');
+  const [toggle, setToggle] = useState(true);
+
+    //apple music token generation
+
+    const appleMusicJwt = require('jsonwebtoken');
+    const fs = require('fs');
+
+    const appleMusicPk = fs.readFileSync('..../AuthKey_Y8F8JV7CXD.p8', 'utf8');
+
+    const appleMusicPayload = {
+      iss: 'YOUR_TEAM_ID',
+      exp: Math.floor(Date.now() / 1000) + 86400, // expires in 24 hours
+      iat: Math.floor(Date.now() / 1000),
+      aud: 'https://api.music.apple.com'
+    };
+
+    const appleMusicOptions = {
+      algorithm: 'RS256',
+      header: {
+        alg: 'RS256',
+        kid: 'YOUR_KEY_ID'
+      }
+    };
+
+    const appleMusicToken = appleMusicJwt.sign(appleMusicPayload, appleMusicPk, appleMusicOptions);
+    console.log(appleMusicToken);
+
+    //spotify token generation
+
+    const spotifyJwt = require('jsonwebtoken');
+
+    const spotifyPrivateKey = `-----BEGIN PRIVATE KEY-----
+    YOUR_PRIVATE_KEY
+    -----END PRIVATE KEY-----`;
+
+    const spotifyPayload = {
+      iss: `${CLIENT_SECRET}`,
+      exp: Math.floor(Date.now() / 1000) + 3600, // expires in 1 hour
+      iat: Math.floor(Date.now() / 1000),
+      sub: `${CLIENT_ID}`,
+      aud: 'https://api.spotify.com'
+    };
+
+    const spotifyOptions = {
+      algorithm: 'RS256',
+      header: {
+        typ: 'JWT'
+      }
+    };
+
+    const spotifyToken = spotifyJwt.sign(spotifyPayload, spotifyPrivateKey, spotifyOptions);
+    console.log(spotifyToken);
 
   useEffect(() => {
     // Spotify API Access Token
-    var spotifyAuthParameters = {
-      method : 'POST',
-      headers : {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
-    }
-    fetch('https://accounts.spotify.com/api/token', spotifyAuthParameters)
-    .then(result => result.json())
-    .then(data => setSpotifyAccessToken(data.access_token))
-
-    // Apple Music API Access Token
-    // var appleMusicAuthParameters = {
-    //   method : 'POST',
-    //   headers : {
-    //     'Content-Type': 'application'
-    //   }
-    // }
+    
 
     const fetchMedia = async () => {
       try {
@@ -229,3 +264,23 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+// var spotifyAuthParameters = {
+    //   method : 'POST',
+    //   headers : {
+    //     'Content-Type': 'application/x-www-form-urlencoded'
+    //   },
+    //   body: 'grant_type=client_credentials&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET
+    // }
+    // fetch('https://accounts.spotify.com/api/token', spotifyAuthParameters)
+    // .then(result => result.json())
+    // .then(data => setSpotifyAccessToken(data.access_token))
+
+    // Apple Music API Access Token
+    // var appleMusicAuthParameters = {
+    //   method : 'POST',
+    //   headers : {
+    //     'Content-Type': 'application'
+    //   }
+    // }
