@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Switch } from 'antd';
 import axios from "axios";
+import jwt from 'jsonwebtoken'
+// import { isExpired, decodeToken } from 'react-jwt'
 
 const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03' // spotify
 const CLIENT_SECRET = 'cc91a30aee904fbf992156e53ee9831a' // spotify
@@ -17,57 +19,78 @@ const HomePage = () => {
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
   const [toggle, setToggle] = useState(true);
+  const [appleMusicJwt, setAppleMusicJwt] = useState('')
+  const [spotifyJwt, setSpotifyJwt] = useState('')
 
     //apple music jwt generation
 
-    const appleMusicJwt = require('jsonwebtoken');
-    const fs = require('fs');
+    // const appleMusicJwt = require('jsonwebtoken');
+    // const fs = require('fs');
 
-    const appleMusicPk = fs.readFileSync('..../AuthKey_Y8F8JV7CXD.p8', 'utf8');
+      const appleMusicPk = `-----BEGIN PRIVATE KEY-----
+      MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgPBVMHz6WCDdR5oUz
+      Jut5eksbQKzhzUKkPgv8oIPPCV2gCgYIKoZIzj0DAQehRANCAASJGjzP8wcHWtUK
+      epmIHhvZFG2ottaX6G//NYEZj+eXYzn4hi//w3ZMgmX1rT1Op/+kK3nwvxcRzshB
+      VbEK8OoY
+      -----END PRIVATE KEY-----`;
 
-    const appleMusicPayload = {
-      iss: `${TEAM_ID}`,
-      exp: Math.floor(Date.now() / 1000) + 86400, // expires in 24 hours
-      iat: Math.floor(Date.now() / 1000),
-      aud: 'https://api.music.apple.com'
-    };
+      const generateAppleMusicJwt = async() => {
+        const tokenAm = jwt.sign({
+        iss: `${TEAM_ID}`,
+        exp: Math.floor(Date.now() / 1000) + 86400 // expires in 24 hours
+        }, appleMusicPk, {algorithm: 'ES265'})
+        return tokenAm;
+      };
 
-    const appleMusicOptions = {
-      algorithm: 'RS256',
-      header: {
-        alg: 'RS256',
-        kid: `${KEY_ID}`
-      }
-    };
+      const appleMusicOptions = {
+        algorithm: 'RS256',
+        header: {
+          alg: 'RS256',
+          kid: `${KEY_ID}`
+        }
+      };
 
-    const appleMusicToken = appleMusicJwt.sign(appleMusicPayload, appleMusicPk, appleMusicOptions);
-    console.log(appleMusicToken);
+      const appleMusicToken = appleMusicJwt.sign(appleMusicPk, appleMusicOptions);
+      console.log(appleMusicToken);
 
-    //spotify jwt generation
+      //spotify jwt generation
 
-    const spotifyJwt = require('jsonwebtoken');
+      // const spotifyJwt = require('jsonwebtoken');
 
-    const spotifyPrivateKey = `${CLIENT_SECRET}`;
+      // const spotifyPrivateKey = `${CLIENT_SECRET}`;
 
-    const spotifyPayload = {
-      iss: `${spotifyPrivateKey}`,
-      exp: Math.floor(Date.now() / 1000) + 3600, // expires in 1 hour
-      iat: Math.floor(Date.now() / 1000),
-      sub: `${CLIENT_ID}`,
-      aud: 'https://api.spotify.com'
-    };
+      // const spotifyPayload = {
+      //   iss: `${spotifyPrivateKey}`,
+      //   exp: Math.floor(Date.now() / 1000) + 3600, // expires in 1 hour
+      //   iat: Math.floor(Date.now() / 1000),
+      //   sub: `${CLIENT_ID}`,
+      //   aud: 'https://api.spotify.com'
+      // };
 
-    const spotifyOptions = {
-      algorithm: 'RS256',
-      header: {
-        typ: 'JWT'
-      }
-    };
+      // const spotifyOptions = {
+      //   algorithm: 'RS256',
+      //   header: {
+      //     typ: 'JWT'
+      //   }
+      // };
 
-    const spotifyToken = spotifyJwt.sign(spotifyPayload, spotifyPrivateKey, spotifyOptions);
-    console.log(spotifyToken);
+      const generateSpotifyJWT = () => {
+        const clientId = `${CLIENT_ID}`;
+        const clientSecret = `${CLIENT_SECRET}`;
+        const payload = {
+          iss: clientId,
+          exp: Math.floor(Date.now() / 1000) + 3600 // expires in 1 hour
+        };
+        const token = jwt.sign(payload, clientSecret, { algorithm: "HS256" });
+        return token;
+      };
+    
+
 
   useEffect(() => {
+
+    generateSpotifyJWT().then(data => setSpotifyJwt(data))
+    generateAppleMusicJwt().then(data => setAppleMusicJwt(data))
     
     const fetchMedia = async () => {
       try {
