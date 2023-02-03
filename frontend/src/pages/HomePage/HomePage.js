@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Switch } from 'antd';
 import axios from "axios";
-import jwt from 'jsonwebtoken'
 // import { isExpired, decodeToken } from 'react-jwt'
 
 const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03' // spotify
@@ -19,7 +18,7 @@ const HomePage = () => {
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
   const [toggle, setToggle] = useState(true);
-  const [appleMusicJwt, setAppleMusicJwt] = useState('')
+  const [appleMusicJwt, setAppleMusicJwt] = useState('');
   const [spotifyJwt, setSpotifyJwt] = useState('')
 
     //apple music jwt generation
@@ -27,31 +26,31 @@ const HomePage = () => {
     // const appleMusicJwt = require('jsonwebtoken');
     // const fs = require('fs');
 
-      const appleMusicPk = `-----BEGIN PRIVATE KEY-----
-      MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgPBVMHz6WCDdR5oUz
-      Jut5eksbQKzhzUKkPgv8oIPPCV2gCgYIKoZIzj0DAQehRANCAASJGjzP8wcHWtUK
-      epmIHhvZFG2ottaX6G//NYEZj+eXYzn4hi//w3ZMgmX1rT1Op/+kK3nwvxcRzshB
-      VbEK8OoY
-      -----END PRIVATE KEY-----`;
+      // const appleMusicPk = `-----BEGIN PRIVATE KEY-----
+      // MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgPBVMHz6WCDdR5oUz
+      // Jut5eksbQKzhzUKkPgv8oIPPCV2gCgYIKoZIzj0DAQehRANCAASJGjzP8wcHWtUK
+      // epmIHhvZFG2ottaX6G//NYEZj+eXYzn4hi//w3ZMgmX1rT1Op/+kK3nwvxcRzshB
+      // VbEK8OoY
+      // -----END PRIVATE KEY-----`;
 
-      const generateAppleMusicJwt = async() => {
-        const tokenAm = jwt.sign({
-        iss: `${TEAM_ID}`,
-        exp: Math.floor(Date.now() / 1000) + 86400 // expires in 24 hours
-        }, appleMusicPk, {algorithm: 'ES265'})
-        return tokenAm;
-      };
+      // const generateAppleMusicJwt = async() => {
+      //   const tokenAm = jwt.sign({
+      //   iss: `${TEAM_ID}`,
+      //   exp: Math.floor(Date.now() / 1000) + 86400 // expires in 24 hours
+      //   }, appleMusicPk, {algorithm: 'ES265'})
+      //   return tokenAm;
+      // };
 
-      const appleMusicOptions = {
-        algorithm: 'RS256',
-        header: {
-          alg: 'RS256',
-          kid: `${KEY_ID}`
-        }
-      };
+      // const appleMusicOptions = {
+      //   algorithm: 'RS256',
+      //   header: {
+      //     alg: 'RS256',
+      //     kid: `${KEY_ID}`
+      //   }
+      // };
 
-      const appleMusicToken = appleMusicJwt.sign(appleMusicPk, appleMusicOptions);
-      console.log(appleMusicToken);
+      // const appleMusicToken = appleMusicJwt.sign(appleMusicPk, appleMusicOptions);
+      // console.log(appleMusicToken);
 
       //spotify jwt generation
 
@@ -74,23 +73,23 @@ const HomePage = () => {
       //   }
       // };
 
-      const generateSpotifyJWT = () => {
-        const clientId = `${CLIENT_ID}`;
-        const clientSecret = `${CLIENT_SECRET}`;
-        const payload = {
-          iss: clientId,
-          exp: Math.floor(Date.now() / 1000) + 3600 // expires in 1 hour
-        };
-        const token = jwt.sign(payload, clientSecret, { algorithm: "HS256" });
-        return token;
-      };
+      // const generateSpotifyJWT = () => {
+      //   const clientId = `${CLIENT_ID}`;
+      //   const clientSecret = `${CLIENT_SECRET}`;
+      //   const payload = {
+      //     iss: clientId,
+      //     exp: Math.floor(Date.now() / 1000) + 3600 // expires in 1 hour
+      //   };
+      //   const token = jwt.sign(payload, clientSecret, { algorithm: "HS256" });
+      //   return token;
+      // };
     
 
 
   useEffect(() => {
 
-    generateSpotifyJWT().then(data => setSpotifyJwt(data))
-    generateAppleMusicJwt().then(data => setAppleMusicJwt(data))
+    // generateSpotifyJWT().then(data => setSpotifyJwt(data))
+    // generateAppleMusicJwt().then(data => setAppleMusicJwt(data))
     
     const fetchMedia = async () => {
       try {

@@ -2,5 +2,5 @@ from django.urls import path, include
 from media import views
 
 urlpatterns = [
-    path('', views.edit_all_media),
+    path('', views.edit_all_media, views.apple_jwt),
 ]
