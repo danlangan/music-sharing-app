@@ -5,11 +5,6 @@ import { Switch } from 'antd';
 import axios from "axios";
 // import { isExpired, decodeToken } from 'react-jwt'
 
-const CLIENT_ID = 'fc41411f058f4c138544fe702e7ecc03' // spotify
-const CLIENT_SECRET = 'cc91a30aee904fbf992156e53ee9831a' // spotify
-
-const TEAM_ID = 'A4NXNNBMQ6' //apple music
-const KEY_ID = 'Y8F8JV7CXD' //apple music
 
 const HomePage = () => {
   // The "user" value from this Hook contains the decoded logged in user information (username, first name, id)
@@ -18,13 +13,7 @@ const HomePage = () => {
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
   const [toggle, setToggle] = useState(true);
-  const [appleMusicJwt, setAppleMusicJwt] = useState('');
-  const [spotifyJwt, setSpotifyJwt] = useState('')
 
-    //apple music jwt generation
-
-    // const appleMusicJwt = require('jsonwebtoken');
-    // const fs = require('fs');
 
       // const appleMusicPk = `-----BEGIN PRIVATE KEY-----
       // MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgPBVMHz6WCDdR5oUz
@@ -33,63 +22,9 @@ const HomePage = () => {
       // VbEK8OoY
       // -----END PRIVATE KEY-----`;
 
-      // const generateAppleMusicJwt = async() => {
-      //   const tokenAm = jwt.sign({
-      //   iss: `${TEAM_ID}`,
-      //   exp: Math.floor(Date.now() / 1000) + 86400 // expires in 24 hours
-      //   }, appleMusicPk, {algorithm: 'ES265'})
-      //   return tokenAm;
-      // };
-
-      // const appleMusicOptions = {
-      //   algorithm: 'RS256',
-      //   header: {
-      //     alg: 'RS256',
-      //     kid: `${KEY_ID}`
-      //   }
-      // };
-
-      // const appleMusicToken = appleMusicJwt.sign(appleMusicPk, appleMusicOptions);
-      // console.log(appleMusicToken);
-
-      //spotify jwt generation
-
-      // const spotifyJwt = require('jsonwebtoken');
-
-      // const spotifyPrivateKey = `${CLIENT_SECRET}`;
-
-      // const spotifyPayload = {
-      //   iss: `${spotifyPrivateKey}`,
-      //   exp: Math.floor(Date.now() / 1000) + 3600, // expires in 1 hour
-      //   iat: Math.floor(Date.now() / 1000),
-      //   sub: `${CLIENT_ID}`,
-      //   aud: 'https://api.spotify.com'
-      // };
-
-      // const spotifyOptions = {
-      //   algorithm: 'RS256',
-      //   header: {
-      //     typ: 'JWT'
-      //   }
-      // };
-
-      // const generateSpotifyJWT = () => {
-      //   const clientId = `${CLIENT_ID}`;
-      //   const clientSecret = `${CLIENT_SECRET}`;
-      //   const payload = {
-      //     iss: clientId,
-      //     exp: Math.floor(Date.now() / 1000) + 3600 // expires in 1 hour
-      //   };
-      //   const token = jwt.sign(payload, clientSecret, { algorithm: "HS256" });
-      //   return token;
-      // };
-    
-
 
   useEffect(() => {
 
-    // generateSpotifyJWT().then(data => setSpotifyJwt(data))
-    // generateAppleMusicJwt().then(data => setAppleMusicJwt(data))
     
     const fetchMedia = async () => {
       try {
