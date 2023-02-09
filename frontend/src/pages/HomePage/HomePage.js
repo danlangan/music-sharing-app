@@ -25,6 +25,7 @@ const HomePage = () => {
 
   useEffect(() => {
 
+    console.log(token)
     
     const fetchMedia = async () => {
       try {

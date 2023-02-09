@@ -64,7 +64,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route
-          path="/"
+          path="/api/media"
           element={
             <PrivateRoute>
               <HomePage />
