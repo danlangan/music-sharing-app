@@ -1,4 +1,5 @@
 # from base64 import b64encode
+from django.conf import SettingsReference
 from django.http import JsonResponse
 # from django.template import RequestContext
 from rest_framework import status
@@ -10,7 +11,6 @@ from .models import Media
 from .serializers import MediaSerializer
 from django.shortcuts import get_object_or_404
 import jwt, time
-
 
 # Create your views here.
 
@@ -24,6 +24,8 @@ def edit_all_media(request, pk):
     if request.method == 'POST':
         serializer = MediaSerializer(media, many=True)
         if serializer.is_valid():
+            apple_music_jwt()
+            spotify_jwt()
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -34,9 +36,6 @@ def edit_all_media(request, pk):
     elif request.method == 'DELETE':
         media.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    apple_music_jwt()
-    spotify_jwt()
     
     #begin apple music jwt generation
     
