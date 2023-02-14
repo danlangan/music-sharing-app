@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'media',
     'rest_framework_simplejwt',
+    'cryptography'
 ]
 
 MIDDLEWARE = [

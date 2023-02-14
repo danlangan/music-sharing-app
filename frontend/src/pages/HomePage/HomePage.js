@@ -15,14 +15,6 @@ const HomePage = () => {
   const [toggle, setToggle] = useState(true);
 
 
-      // const appleMusicPk = `-----BEGIN PRIVATE KEY-----
-      // MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgPBVMHz6WCDdR5oUz
-      // Jut5eksbQKzhzUKkPgv8oIPPCV2gCgYIKoZIzj0DAQehRANCAASJGjzP8wcHWtUK
-      // epmIHhvZFG2ottaX6G//NYEZj+eXYzn4hi//w3ZMgmX1rT1Op/+kK3nwvxcRzshB
-      // VbEK8OoY
-      // -----END PRIVATE KEY-----`;
-
-
   useEffect(() => {
 
     console.log(token)
