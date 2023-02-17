@@ -7,6 +7,6 @@ urlpatterns = [
     path('getSpotifyToken/', views.spotify_jwt),
     path('getSpotifyMediaInfo/', views.get_spotify_media_info),
     path('getAppleMusicMediaInfo/', views.get_apple_music_media_info),
-    # path('getAppleSharingUrl'),
-    # path('getSpotifySharingUrl')
+    path('getAppleSharingUrl/', views.search_apple_music),
+    path('getSpotifySharingUrl/', views.search_spotify)
 ]

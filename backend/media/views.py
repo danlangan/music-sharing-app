@@ -69,23 +69,19 @@ VbEK8OoY
     apple_jwt_token = jwt.encode(payload, apple_private_key, algorithm="ES256", headers=header)
     
     print(apple_jwt_token)
-    
-    headers = {
-        "Authorization": "Bearer " + apple_jwt_token,
-        "User-Agent": "com.capstoneproject.musicsharingapp",
-    }
+    return JsonResponse({"jwt": apple_jwt_token})
 
 
-    # will need to pass the data into this param from the spotify data return. Also will need to 
-    params ={'term':'Jack', 'limit':10}
+    # # will need to pass the data into this param from the spotify data return. Also will need to 
+    # params ={'term':'Jack', 'limit':10}
 
-    apple_music_response = requests.get("https://api.music.apple.com/v1/catalog/us/search", headers=headers, params=params)
-    print(apple_music_response)
-    if apple_music_response.status_code == 200:
-        return Response({'music':apple_music_response.json()})
-    else: 
-        data = 'API request failed'
-        print(f"API request failed with status code: {apple_music_response.status_code}")
+    # apple_music_response = requests.get("https://api.music.apple.com/v1/catalog/us/search", headers=headers, params=params)
+    # print(apple_music_response)
+    # if apple_music_response.status_code == 200:
+    #     return Response({'music':apple_music_response.json()})
+    # else: 
+    #     data = 'API request failed'
+    #     print(f"API request failed with status code: {apple_music_response.status_code}")
 
     
 
@@ -163,6 +159,7 @@ def search_spotify(request):
     apple_music_data = apple_music_response.json()
 
     # Extract the media info from Apple Music data
+    media_type = apple_music_data["media_type"]
     title = apple_music_data['data'][0]['attributes']['name']
     artist = apple_music_data['data'][0]['attributes']['artistName']
     album = apple_music_data['data'][0]['attributes']['albumName']
@@ -171,7 +168,7 @@ def search_spotify(request):
     query = f"track:{title} artist:{artist} album:{album}"
     params = {
         "q": query,
-        "type": "track",
+        "type": media_type,
         "limit": 2
     }
 
@@ -222,12 +219,21 @@ def get_apple_music_media_info(request):
     apple_music_api_url = f"https://api.music.apple.com/v1/{apple_ready_media_type}/{apple_ready_media_id}"
     headers = {
         "Authorization": f"Bearer {apple_jwt_token}",
-        "User-Agent": "com.capstoneproject.musicsharingapp",  # Insert the user token for the current user
+        "User-Agent": "com.capstoneproject.musicsharingapp", 
     }
     response = requests.get(apple_music_api_url, headers=headers)
     apple_music_data = response.json()
 
-    return JsonResponse(apple_music_data, {"message": "Success!"})
+    if response.status_code == 200:
+        apple_music_data = json.loads(response.text)
+        media_type = apple_music_data['results']['library-songs']['data'][0]['attributes']['playParams']['kind']
+        title = apple_music_data['results']['library-songs']['data'][0]['attributes']['name']
+        artist = apple_music_data['results']['library-songs']['data'][0]['attributes']['artistName']
+        album = apple_music_data['results']['library-songs']['data'][0]['attributes']['albumName']
+        return {"media_type": media_type, "title": title, "artist": artist, "album": album}
+    else:
+        # Return an error message if the response was not successful
+        return {"error": f"Failed to get Apple Music media info: {response.status_code}"}
 
 @api_view(['GET'])
 def search_apple_music(request):
@@ -265,7 +271,7 @@ def search_apple_music(request):
                 break
 
         # Return the external sharing links as a JSON response
-        return Response({"links": external_links})
+        return Response({"links": external_links}, )
     else: 
         data = 'API request failed'
         print(f"API request failed with status code: {apple_music_response.status_code}")
