@@ -195,12 +195,14 @@ def search_spotify(request):
                 if "spotify" in link:
                     external_links.append(link)
                     break
+        
+        data = {"external_links": external_links}
 
         # Return the external sharing links as a JSON response
-        return JsonResponse({"external_links": external_links})
+        return JsonResponse(data)
     else:
-        # Return an error message if the response was not successful
-        return JsonResponse({"error": f"Failed to search Spotify: {response.status_code}"})
+       data = {"error": f"Failed to search Spotify: {response.status_code}"}
+    return Response(data)
 
 @api_view(['GET'])
 def get_apple_music_media_info(request):

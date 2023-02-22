@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Switch } from 'antd';
 import axios from "axios";
+import $ from 'jquery'
 // import { isExpired, decodeToken } from 'react-jwt'
 
 const HomePage = () => {
@@ -65,38 +66,24 @@ const HomePage = () => {
         }
         },);
         console.log(response.data)
-        let spotifyDataReturn = response.data;
-        // getSpotifyApiData(spotifyDataReturn);
+        var spotifyDataReturn = response.data;
+        queryAppleMusic(spotifyDataReturn);
       } catch (error) {
         console.log(error.message);
       };
+    };
+    async function queryAppleMusic(spotifyDataReturn) {
+      try{
+        let response = await axios.get('http://127.0.0.1:8000/api/media/getAppleSharingUrl/');
+        let appleMusicDataReturn = response.data;
+        console.log(response.data);
+        console.log(appleMusicDataReturn);
+      } catch (error) {
+        console.log(error.message);
       };
-      // function getSpotifyApiData(spotifyDataReturn) {
-      //   if (readyMediaType === 'tracks') {
-      //     let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
-      //     queryAppleMusic(parsedSpotifyData);
-      // } else if (readyMediaType === 'playlists') {
-      //     let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
-      //     queryAppleMusic(parsedSpotifyData);
-      // } else if (readyMediaType === 'albums') {
-      //     let parsedSpotifyData = `'mediaName' : ${spotifyDataReturn.href}`
-      //     queryAppleMusic(parsedSpotifyData);
-      // };
-      
-    
-    // async function queryAppleMusic(parsedSpotifyData) {
-    //   try{
-    //     let response = await axios.get(`https://api.music.apple.com/v1/me/library/search/${parsedSpotifyData.href.artists.name}+${parsedSpotifyData.href.name}`);
-    //     let appleMusicDataReturn = response.data;
-    //     console.log(response.data);
-    //     console.log(appleMusicDataReturn);
-    //   } catch (error) {
-    //     console.log(error.message);
-    //   };
-    // };
-  }
-  
-  else if (toggle === false) {
+    };
+
+  } else if (toggle === false) {
     debugger;
     const splitUrlScoped = mediaInfo.split('/');
     let readyMediaType = ''
@@ -126,28 +113,17 @@ const HomePage = () => {
           }
           },)
         console.log(response.data)
-        let appleMusicDataReturn = response.data;
+        var appleMusicDataReturn = response.data;
         console.log(appleMusicDataReturn);
-        getAppleMusicApiData(appleMusicDataReturn);
       } catch (error) {
         console.log(error.message)
       }
-    }
-    function getAppleMusicApiData(appleMusicDataReturn) {
-      if (readyMediaType === 'tracks') {
-        let parsedAppleData = `'mediaName' : ${appleMusicDataReturn.href}`
-        querySpotify(parsedAppleData);
-    } else if (readyMediaType === 'playlists') {
-        let parsedAppleData = `'mediaName' : ${appleMusicDataReturn.href}`
-        querySpotify(parsedAppleData);
-    } else if (readyMediaType === 'albums') {
-        let parsedAppleData = `'mediaName' : ${appleMusicDataReturn.href}`
-        querySpotify(parsedAppleData);
+      querySpotify(appleMusicDataReturn);
     };
-  };
-  async function querySpotify(parsedAppleData, splitUrlScoped) {
+
+  async function querySpotify(appleMusicDataReturn) {
     try {
-      let response = await axios.get(`https://api.spotify.com/v1/search?type=${splitUrlScoped[4]},${parsedAppleData.name}_${parsedAppleData.artists}`);
+      let response = await axios.get('http://127.0.0.1:8000/api/media/getSpotifySharingUrl/');
         console.log(response.data)
         let spotifyDataReturn = response.data;
         console.log(spotifyDataReturn);
@@ -168,6 +144,35 @@ const HomePage = () => {
   const spotifyOrApple = () => {
     toggle ? setToggle(false): setToggle(true);
   }
+
+  $.ajax({
+    url: 'http://127.0.0.1:8000/api/search_apple_music/',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        // display the links in the UI
+        var links = data.links;
+        // do something with the links...
+    },
+    error: function(xhr, status, error) {
+        // handle error
+    }
+});
+
+$.ajax({
+  url: "http://127.0.0.1:8000/search_spotify/",
+  type: "GET",
+  success: function(data) {
+      // Use the data returned by the API
+      console.log("External links: ", data.external_links);
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+      // Handle the error case
+      console.error("Error searching Spotify: ", textStatus, errorThrown);
+  }
+});
+
+
 
   return (
     <div className="container">
@@ -196,4 +201,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
