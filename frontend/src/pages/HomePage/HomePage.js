@@ -13,6 +13,8 @@ const HomePage = () => {
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
   const [toggle, setToggle] = useState(true);
+  const [spotifySharingLinks, setSpotifySharingLinks] = useState('')
+  const [appleSharingLinks, setAppleSharingLinks] = useState('')
 
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const HomePage = () => {
     fetchSpotifyMediaData(readyMediaType, readyMediaId); // will need to add the spotify access token in here 
 
     function fetchSpotifyMediaData(readyMediaType, readyMediaId) {
-      let spotifyMediaParams = [readyMediaType, readyMediaId]
+      let spotifyMediaParams = {readyMediaType, readyMediaId}
       try{
         let response = axios.post("http://127.0.0.1:8000/api/media/getSpotifyMediaInfo/", spotifyMediaParams, {
         headers: {
@@ -101,11 +103,12 @@ const HomePage = () => {
     };
     function selectMediaId(splitUrlScoped) {
       readyMediaId = splitUrlScoped[5];
+      console.log(splitUrlScoped[5])
     }
     fetchAppleMusicMediaData(readyMediaType, readyMediaId);
 
     function fetchAppleMusicMediaData(readyMediaType, readyMediaId) {
-      let appleMusicMediaParams = [readyMediaType, readyMediaId]
+      let appleMusicMediaParams = {"appleMusicMediaParams":[readyMediaType, readyMediaId]}
       try{
         let response = axios.post("http://127.0.0.1:8000/api/media/getAppleMusicMediaInfo/", appleMusicMediaParams, {
           headers: {
@@ -145,32 +148,35 @@ const HomePage = () => {
     toggle ? setToggle(false): setToggle(true);
   }
 
-  $.ajax({
-    url: 'http://127.0.0.1:8000/api/search_apple_music/',
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) {
-        // display the links in the UI
-        var links = data.links;
-        // do something with the links...
-    },
-    error: function(xhr, status, error) {
-        // handle error
-    }
-});
+//   $.ajax({
+//     url: 'http://127.0.0.1:8000/api/media/search_apple_music/',
+//     type: 'GET',
+//     dataType: 'json',
+//     success: function(data) {
+//         // display the links in the UI
+//         setAppleSharingLinks(data.links)
+//         console.log(appleSharingLinks)
+//         // do something with the links...
+//     },
+//     error: function(xhr, status, error) {
+//         // handle error
+//     }
+// });
 
-$.ajax({
-  url: "http://127.0.0.1:8000/search_spotify/",
-  type: "GET",
-  success: function(data) {
-      // Use the data returned by the API
-      console.log("External links: ", data.external_links);
-  },
-  error: function(jqXHR, textStatus, errorThrown) {
-      // Handle the error case
-      console.error("Error searching Spotify: ", textStatus, errorThrown);
-  }
-});
+// $.ajax({
+//   url: "http://127.0.0.1:8000/api/media/search_spotify/",
+//   type: "GET",
+//   success: function(data) {
+//       // Use the data returned by the API
+//       console.log("External links: ", data.external_links);
+//       setSpotifySharingLinks(data.external_links);
+//       console.log(spotifySharingLinks);
+//   },
+//   error: function(jqXHR, textStatus, errorThrown) {
+//       // Handle the error case
+//       console.error("Error searching Spotify: ", textStatus, errorThrown);
+//   }
+// });
 
 
 
@@ -187,6 +193,7 @@ $.ajax({
       <input placeholder='Paste sharing link here' value={mediaInfo} onChange={(event) => setMediaInfo(event.target.value)}></input>
       <button type='submit'>Generate Sharing Capability</button>
       </form>
+      {toggle ? <span>{appleSharingLinks}</span> : <span>{spotifySharingLinks}</span>}
       <h2>See your history of shared media below:</h2>
       <ul>
       {medias &&
