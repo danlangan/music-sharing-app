@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Switch } from 'antd';
 import axios from "axios";
-import $ from 'jquery'
-// import { isExpired, decodeToken } from 'react-jwt'
+
+const CLIENT_ID = "fc41411f058f4c138544fe702e7ecc03"
+const REDIRECT_URI = "http://localhost:3000"
+const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
+const RESPONSE_TYPE = "token"
 
 const HomePage = () => {
   // The "user" value from this Hook contains the decoded logged in user information (username, first name, id)
@@ -13,12 +16,21 @@ const HomePage = () => {
   const [medias, setMedias] = useState([]);
   const [mediaInfo, setMediaInfo] = useState('');
   const [toggle, setToggle] = useState(true);
-  const [spotifySharingLinks, setSpotifySharingLinks] = useState('')
-  const [appleSharingLinks, setAppleSharingLinks] = useState('')
+  const [spotifyToken, setSpotifyToken] = useState('')
 
 
   useEffect(() => {
+    const hash = window.location.hash
+    let spotifyToken = window.localStorage.getItem("token")
 
+    if (!spotifyToken && hash) {
+        spotifyToken = hash.substring(1).split("&").find(elem => elem.startsWith("access_token")).split("=")[1]
+
+        window.location.hash = ""
+        window.localStorage.setItem("token", spotifyToken)
+    }
+
+    setSpotifyToken(spotifyToken)
     console.log(token)
     
     const fetchMedia = async () => {
@@ -35,6 +47,8 @@ const HomePage = () => {
     };
     fetchMedia();
   }, [token]);
+
+  console.log(spotifyToken)
 
 
   function getMediaInfo() {
@@ -183,7 +197,7 @@ const HomePage = () => {
   return (
     <div className="container">
       <h1>Welcome home, {user.username}!</h1>
-
+      <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login to Spotify</a>
       <form onSubmit={handleSubmit}>
         <div>
         <p>Toggle between sharing Spotify or an Apple Music Media</p>
@@ -193,7 +207,7 @@ const HomePage = () => {
       <input placeholder='Paste sharing link here' value={mediaInfo} onChange={(event) => setMediaInfo(event.target.value)}></input>
       <button type='submit'>Generate Sharing Capability</button>
       </form>
-      {toggle ? <span>{appleSharingLinks}</span> : <span>{spotifySharingLinks}</span>}
+      {/* {toggle ? <span>{appleSharingLinks}</span> : <span>{spotifySharingLinks}</span>} */}
       <h2>See your history of shared media below:</h2>
       <ul>
       {medias &&
